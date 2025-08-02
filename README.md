@@ -1,3 +1,7 @@
+## Autor
+
+## [@DanielAngul0](https://github.com/DanielAngul0)
+
 # taller #1 de Arquitectura de Software: Cliente-Servidor
 
 ## Descripción
