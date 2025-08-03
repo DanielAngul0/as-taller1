@@ -1,10 +1,9 @@
 ## Autor
+### Estudiante: Daniel Andres Angulo Perez
 
 ## [@DanielAngul0](https://github.com/DanielAngul0)
 
 # taller #1 de Arquitectura de Software: Cliente-Servidor
-
-# Estudiante: Daniel Angulo
 
 ## Descripción
 
