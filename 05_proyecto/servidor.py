@@ -21,5 +21,17 @@ while True:
     client_sock, addr = server.accept()
     # Mostrar en consola la IP del cliente
     print(f"# Conexión recibida de {addr}")
-    # Cerrar inmediatamente la conexión (prueba básica)
+    
+    # Recibir hasta 1024 bytes (se espera “ping”)
+    data = client_sock.recv(1024)
+    mensaje = data.decode().strip()
+    print(f"# Mensaje recibido: {mensaje}")
+    
+    # Si el mensaje es “ping”, responder “pong”
+    if mensaje.lower() == "ping":
+        client_sock.sendall(b"pong")
+        print("# Enviado: pong")
+    
+    # Cerrar la conexión
     client_sock.close()
+    print("# Conexión cerrada con", addr)
