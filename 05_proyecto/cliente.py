@@ -33,8 +33,8 @@ def main():
     client.sendall(nombre.encode())
     
     # Iniciar hilo de recepción de mensajes
-    hilo_recv = threading.Thread(target=receive_loop, args=(client,), daemon=True)
-    hilo_recv.start()
+    hilo = threading.Thread(target=receive_loop, args=(client,), daemon=True)
+    hilo.start()
 
     # Bucle principal: enviar lo que el usuario teclee
     while True:

@@ -11,6 +11,14 @@ clients = {}          # socket -> {'name': str, 'room': str}
 # Mapea cada sala a la lista de sockets que están dentro
 rooms = {'Lobby': []}
 
+# Diccionario de comandos y sus descripciones
+COMMANDS = {
+    '/join <sala>': 'Cambiarte a la sala indicada (la crea si no existe).',
+    '/users':       'Lista los usuarios en tu sala actual.',
+    '/rooms':       'Lista todas las salas disponibles.',
+    '/help':        'Muestra esta lista de comandos.'
+}
+
 # Función para enviar un mensaje solo a los miembros de una sala
 def broadcast_room(message: str, room: str, exclude_sock=None):
     data = message.encode()
@@ -21,16 +29,32 @@ def broadcast_room(message: str, room: str, exclude_sock=None):
             except:
                 pass
 
-# Función que maneja a cada cliente en un hilo separado
+# Función para enviar la lista de comandos a un cliente
+def send_help(sock):
+    lines = ["» Comandos disponibles:"]
+    for cmd, desc in COMMANDS.items():
+        lines.append(f"   {cmd:<15} — {desc}")
+    sock.sendall(("\n".join(lines)).encode())
+    print(f"[SERVER] Enviado /help a {sock.getpeername()}")
+
+# Función que gestiona a cada cliente en un hilo
 def handle_client(client_sock: socket.socket):
     # Recibir y registrar nombre de usuario
     name = client_sock.recv(1024).decode().strip()
     clients[client_sock] = {'name': name, 'room': 'Lobby'}
     rooms['Lobby'].append(client_sock)
+    print(f"[SERVER] {name} conectado en Lobby")
 
-    # Notificar en Lobby
+    # Aviso de bienvenida
     broadcast_room(f"» {name} se ha unido a Lobby", 'Lobby', exclude_sock=client_sock)
-    client_sock.sendall("» Bienvenido a Lobby. Usa /join <sala> para cambiar de sala.".encode())
+    client_sock.sendall(
+        "» Bienvenido a Lobby.\n"
+        "  Usa /join <sala> para cambiar.\n"
+        "  Usa /users  para ver participantes.\n"
+        "  Usa /rooms  para ver salas.\n"
+        "  Usa /help   para ver comandos.\n"
+        .encode()
+    )
     
     # Bucle de recepción de mensajes
     while True:
@@ -39,26 +63,45 @@ def handle_client(client_sock: socket.socket):
             if not data:
                 break
             text = data.decode().strip()
-            current_room = clients[client_sock]['room']
+            room = clients[client_sock]['room']
+            
+            # Comando: /help
+            if text in ('/help', '/commands'):
+                print(f"[SERVER] {name} solicitó /help")
+                send_help(client_sock)
+                continue
 
             # Comando: /join <sala>
             if text.startswith('/join '):
                 new_room = text.split(' ', 1)[1]
-                old_room = current_room
+                print(f"[SERVER] {name} abandona {room}")
+                rooms[room].remove(client_sock)
+                broadcast_room(f"« {name} ha dejado {room}", room)
 
-                # Salir de la sala actual
-                rooms[old_room].remove(client_sock)
-                broadcast_room(f"« {name} ha dejado {old_room}", old_room)
-
-                # Entrar o crear la nueva sala
                 rooms.setdefault(new_room, []).append(client_sock)
                 clients[client_sock]['room'] = new_room
+                print(f"[SERVER] {name} entra en {new_room}")
                 client_sock.sendall(f"» Has entrado en {new_room}".encode())
                 broadcast_room(f"» {name} se ha unido a {new_room}", new_room, exclude_sock=client_sock)
                 continue
+            
+            # Comando: /users
+            if text == '/users':
+                participants = [clients[s]['name'] for s in rooms.get(room, [])]
+                print(f"[SERVER] {name} solicitó /users en {room}")
+                client_sock.sendall(f"» Usuarios en {room}: {', '.join(participants)}".encode())
+                continue
+
+            #Comando: /rooms
+            if text == '/rooms':
+                salas = list(rooms.keys())
+                print(f"[SERVER] {name} solicitó /rooms")
+                client_sock.sendall(f"» Salas disponibles: {', '.join(salas)}".encode())
+                continue
 
             # Mensaje normal: reenviar solo dentro de la sala actual
-            broadcast_room(f"[{name}] {text}", current_room, exclude_sock=client_sock)
+            print(f"[SERVER] {name} en {room}: {text}")
+            broadcast_room(f"[{name}] {text}", room, exclude_sock=client_sock)
 
         except ConnectionResetError:
             break
@@ -67,6 +110,7 @@ def handle_client(client_sock: socket.socket):
     room = clients[client_sock]['room']
     rooms[room].remove(client_sock)
     broadcast_room(f"« {name} se ha desconectado", room)
+    print(f"[SERVER] {name} desconectado de {room}")
     del clients[client_sock]
     client_sock.close()
 
