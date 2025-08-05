@@ -130,24 +130,68 @@ python server.py
 # http://localhost:8080
 ```
 
-### 5. Proyecto del Estudiante
+### 5. Proyecto de Chat por Salas (Cliente/Servidor)
+
+## 🗂️ Estructura
 
 - **Ubicación**: `05_proyecto/`
-- **Descripción**: _Cada estudiante debe crear un programa cliente/servidor de su elección_
-- **Características**:
-  - _elabora la documentación_
-  - ...
-  - ...
+- **Archivos principales**:
+  - `servidor.py`: Código del servidor que administra las salas, usuarios y mensajes.
+  - `cliente.py`: Código del cliente que permite interactuar con el sistema.
 
-**Uso**:
+## 🧠 Descripción
+Sistema de chat por consola con soporte para múltiples salas, utilizando sockets en Python.
+
+## ⚙️ Características
+  - Comunicación en tiempo real entre múltiples clientes.
+  - Múltiples salas de chat (se pueden crear y unir con `/join <sala>`).
+  - Listado de usuarios conectados en la sala actual (`/users`).
+  - Listado de salas disponibles (`/rooms`).
+  - Ayuda y comandos disponibles (`/help`).
+  - Cada acción relevante (salida, mensajes, etc.) se registra en el servidor.
+  - Estructura con hilos para manejo concurrente de clientes.
+
+**Ejemplo de flujo**:
+
+1) Un usuario ejecuta servidor.py.
+
+2) Otros usuarios ejecutan cliente.py e ingresan su nombre.
+
+3)  Se conectaran a la sala por defecto **Lobby**.
+
+4) Pueden chatear o moverse a otras salas usando comandos.
+
+
+## 📝 Comandos Disponibles en el Cliente
+
+| Comando         | Descripción                                                                 |
+|-----------------|------------------------------------------------------------------------------|
+| **`/join <sala>`**  | Cambiarte a la sala indicada (la crea si no existe)                         |
+| **`/users`**        | Ver los usuarios en la sala actual                                           |
+| **`/rooms`**        | Ver las salas disponibles                                                    |
+| **`/help`**         | Ver esta lista de comandos                                                   |
+
+
+###  🛠️ Requisitos
+
+- Python 3.7 o superior (recomendado Python 3.10+)
+
+## 🖥️ Uso
+
+1. Abre una terminal para iniciar el **servidor**:
 
 ```bash
-# Terminal 1 - Servidor
-python servidor.py
-
-# Terminal 2 - Cliente
-python cliente.py
+# Terminal del servidor
+python3 servidor.py
 ```
+
+2. Abre dos o más terminales adicionales, una por cada **cliente** que desees conectar:
+
+```bash
+# Terminal del cliente
+python3 cliente.py
+```
+
 
 ## Conceptos
 
