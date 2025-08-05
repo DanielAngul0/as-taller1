@@ -143,13 +143,13 @@ python server.py
 Sistema de chat por consola con soporte para múltiples salas, utilizando sockets en Python.
 
 ## ⚙️ Características
-  - Comunicación en tiempo real entre múltiples clientes.
-  - Múltiples salas de chat (se pueden crear y unir con `/join <sala>`).
-  - Listado de usuarios conectados en la sala actual (`/users`).
-  - Listado de salas disponibles (`/rooms`).
-  - Ayuda y comandos disponibles (`/help`).
-  - Cada acción relevante (salida, mensajes, etc.) se registra en el servidor.
-  - Estructura con hilos para manejo concurrente de clientes.
+  - Comunicación en tiempo real entre múltiples clientes.  
+- Múltiples salas de chat (se pueden crear y unir con `/unirse nombre_sala`).  
+- Listado de usuarios conectados en la sala actual (`/usuarios`).  
+- Listado de salas disponibles (`/salas`).  
+- Ayuda y comandos disponibles (`/ayuda`).  
+- Cada acción relevante (salida, mensajes, etc.) se registra en el servidor.  
+- Estructura con hilos para manejo concurrente de clientes.  
 
 **Ejemplo de flujo**:
 
@@ -164,12 +164,12 @@ Sistema de chat por consola con soporte para múltiples salas, utilizando socket
 
 ## 📝 Comandos Disponibles en el Cliente
 
-| Comando         | Descripción                                                                 |
-|-----------------|------------------------------------------------------------------------------|
-| **`/join <sala>`**  | Cambiarte a la sala indicada (la crea si no existe)                         |
-| **`/users`**        | Ver los usuarios en la sala actual                                           |
-| **`/rooms`**        | Ver las salas disponibles                                                    |
-| **`/help`**         | Ver esta lista de comandos                                                   |
+| Comando              | Descripción                                                        |
+|----------------------|---------------------------------------------------------------------|
+| `/unirse nombre_sala`     | Cambiarte a la sala indicada (la crea si no existe)                |
+| `/usuarios`          | Ver los usuarios en la sala actual                                  |
+| `/salas`             | Ver las salas disponibles                                           |
+| `/ayuda`             | Ver esta lista de comandos                                          |
 
 
 ###  🛠️ Requisitos
