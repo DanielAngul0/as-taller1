@@ -3,7 +3,7 @@
 
 ## [@DanielAngul0](https://github.com/DanielAngul0)
 
-# taller #1 de Arquitectura de Software: Cliente-Servidor
+# Taller #1 de Arquitectura de Software: Cliente-Servidor
 
 ## Descripción
 
@@ -56,12 +56,31 @@ pip install -r requirements.txt
 
 ### 1. Sockets Básicos (Paso de Mensajes)
 
-- **Ubicación**: `01_sockets/`
-- **Descripción**: Implementación básica de comunicación cliente-servidor con sockets
+- **Ubicación**: `01_sockets/`<br><br>
+
+- **Descripción**: Implementación básica de comunicación cliente-servidor con sockets.<br><br>
+
 - **Características**:
-  - _elabora la documentación_
-  - ...
-  - ...
+
+  - **Formato de datos:** Los sockets transmiten datos en binario, por lo que los textos deben codificarse **(b"texto")** y, si es necesario, decodificarse (`.decode()`).<br><br>
+
+  - **Buffer:** El parámetro **1024** en `recv()` define el tamaño máximo (en bytes) que se leerá en una sola operación.<br><br>
+
+  - **Puerto:** Es recomendable usar puertos mayores a **1024** para evitar conflictos con servicios del sistema.
+
+**Ejemplo de flujo**:
+
+1) Un usuario ejecuta servidor.py y el servidor de queda esperando conexiones.
+
+2) Un usuario ejecuta cliente.py y se conecta al servidor.
+
+3) El cliente envía un mensaje al servidor.
+
+4) El servidor recibe el mensaje, lo procesa y le responde.
+
+5) El cliente recibe la respuesta y la muestra por pantalla.
+
+6) Ambas partes cierran la conexión.
 
 **Uso**:
 
@@ -75,12 +94,33 @@ python cliente.py
 
 ### 2. Servidor Echo
 
-- **Ubicación**: `02_echo/`
-- **Descripción**: Servidor que devuelve exactamente lo que recibe del cliente
+- **Ubicación**: `02_echo/`<br><br>
+
+- **Descripción**: Servidor que devuelve exactamente lo que recibe del cliente.<br><br>
+
 - **Características**:
-  - _elabora la documentación_
-  - ...
-  - ...
+    - El servidor no se detiene después de atender un cliente.<br><br>
+
+    - La codificación (`.encode()`) y decodificación (`.decode()`) son esenciales para transformar entre texto y binario.<br><br>
+
+    - El parámetro **1024** en `recv()` define el tamaño máximo de datos que se pueden recibir en una sola lectura.
+
+
+**Ejemplo de flujo**:
+
+1) Un usuario ejecuta servidor.py y el servidor de queda esperando conexiones.
+
+2) Un usuario ejecuta cliente.py y se conecta al servidor.
+
+3) El cliente envía un mensaje codificado al servidor.
+
+4) El servidor recibe el mensaje del cliente.
+
+5) El servidor envía el mismo mensaje de vuelta.
+
+6) El cliente recibe y decodifica la respuesta.
+
+7) Se cierra la conexión y el servidor vuelve a estar a la escucha escuchar.
 
 **Uso**:
 
@@ -94,12 +134,30 @@ python cliente.py
 
 ### 3. Chat Multiusuario
 
-- **Ubicación**: `03_chat/`
-- **Descripción**: Sistema de chat que permite múltiples usuarios conectados simultáneamente
+- **Ubicación**: `03_chat/`<br><br>
+
+- **Descripción**: Sistema de chat que permite múltiples usuarios conectados simultáneamente.<br><br>
+
 - **Características**:
-  - _elabora la documentación_
-  - ...
-  - ...
+  - El uso de hilos permite que tanto el cliente como el servidor manejen tareas simultáneamente sin bloquear la ejecución.<br><br> 
+
+  - `recv(1024)` define que el tamaño máximo de mensaje recibido será de 1024 bytes por lectura.<br><br>
+
+  - El servidor actual envía mensajes a todos menos al emisor, lo que evita duplicados en el cliente que envía.
+
+**Ejemplo de flujo**:
+
+1) Un usuario ejecuta servidor.py y el servidor de queda esperando conexiones.
+
+2) Otros usuarios ejecutan cliente.py e ingresan su nombre, los usuarios registrados seran añadidos a una lista de usuarios.
+
+3) El servidor notifica a todos que un nuevo usuario se ha unido, excepto al ultimo usuario que se unio.
+
+4) El cliente inicia un hilo para escuchar mensajes.    
+
+5) Los mensajes enviados por un cliente son recibidos por el servidor y reenviados a todos los demás clientes conectados.
+
+6) Si un cliente se desconecta, el servidor lo elimina de la lista y cierra su conexión.
 
 **Uso**:
 
@@ -113,12 +171,30 @@ python cliente.py
 
 ### 4. Servidor HTTP Básico
 
-- **Ubicación**: `04_http/`
-- **Descripción**: Implementación de un servidor HTTP básico desde cero
+- **Ubicación**: `04_http/`<br><br>
+
+- **Descripción**: Implementación de un servidor HTTP básico desde cero.<br><br>
+
 - **Características**:
-  - _elabora la documentación_
-  - ...
-  - ...
+
+  - El servidor siempre responde desde el directorio donde fue ejecutado, a menos que se configure de otra forma.<br><br>
+
+  - Puede probarse abriendo un navegador en http://localhost:9000/ para ver la respuesta directa.
+
+**Flujo de comunicación:**
+1) El servidor HTTP se inicia y queda escuchando en **localhost:9000**.
+
+2) El cliente establece una conexión HTTP con el servidor.
+
+3) El cliente envía una petición **GET /**.
+
+4) El servidor recibe la petición y, usando **SimpleHTTPRequestHandler**, responde con un archivo o listado de directorios.
+
+5) El cliente lee la respuesta, la decodifica y la muestra.
+
+6) El cliente cierra la conexión.
+
+7) El servidor sigue a la escucha.
 
 **Uso**:
 
